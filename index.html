@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>일본어 단어장</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="tabs">
+        <button class="tab active" data-mode="vocabulary">📖 단어 <span id="vocab-count"></span></button>
+        <button class="tab" data-mode="grammar">📝 문형 <span id="grammar-count"></span></button>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="progress-text" id="progress-text"></div>
+    </header>
+
+    <main>
+      <div id="card-container">
+        <div id="card" class="card">
+          <div class="card-inner" id="card-inner">
+            <div class="card-front">
+              <img id="card-img" src="" alt="하이라이트 구문" />
+              <div class="page-badge" id="page-badge"></div>
+              <div class="hint">탭해서 뒤집기</div>
+            </div>
+            <div class="card-back">
+              <div class="meaning-area">
+                <label class="meaning-label">뜻 / 메모</label>
+                <textarea id="meaning-input" placeholder="뜻이나 메모를 입력하세요..."></textarea>
+                <button id="save-btn" class="save-btn">저장</button>
+              </div>
+              <div class="example-area" id="example-area" style="display:none">
+                <div class="example-label">예문</div>
+                <div id="example-text"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-area">
+        <div class="counter" id="counter">1 / 1</div>
+        <div class="nav-buttons">
+          <button id="prev-btn" class="nav-btn">◀</button>
+          <button id="unknown-btn" class="result-btn unknown">✗ 모름</button>
+          <button id="known-btn" class="result-btn known">✓ 알아</button>
+          <button id="next-btn" class="nav-btn">▶</button>
+        </div>
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">전체</button>
+          <button class="filter-btn" data-filter="unknown">모르는 것</button>
+          <button class="filter-btn" data-filter="known">아는 것</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
