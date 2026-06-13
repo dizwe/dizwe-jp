@@ -41,11 +41,35 @@ header {
   flex-shrink: 0;
 }
 
-.total-count {
-  font-size: 13px;
-  font-weight: 600;
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tab {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
   color: var(--text2);
-  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab.active {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: rgba(249, 115, 22, 0.1);
+}
+
+.tab.active[data-mode="listen"] {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(34, 197, 94, 0.1);
 }
 
 .progress-bar-wrap {

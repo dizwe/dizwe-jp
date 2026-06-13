@@ -9,7 +9,10 @@
 <body>
   <div id="app">
     <header>
-      <div class="total-count" id="total-count"></div>
+      <div class="tabs">
+        <button class="tab active" data-mode="read">읽기 <span id="read-count"></span></button>
+        <button class="tab" data-mode="listen">듣기 <span id="listen-count"></span></button>
+      </div>
       <div class="progress-bar-wrap">
         <div class="progress-bar" id="progress-bar"></div>
       </div>

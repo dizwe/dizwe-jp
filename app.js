@@ -2,7 +2,8 @@
 
 const STORAGE_KEY = 'jp-tangocho-v1';
 
-let items = [];
+let allItems = [];
+let mode = 'read';   // 'read' | 'listen'
 let filter = 'all';
 let currentIndex = 0;
 let isFlipped = false;
@@ -14,7 +15,8 @@ const pageBadge    = document.getElementById('page-badge');
 const counter      = document.getElementById('counter');
 const progressBar  = document.getElementById('progress-bar');
 const progressText = document.getElementById('progress-text');
-const totalCount   = document.getElementById('total-count');
+const readCount    = document.getElementById('read-count');
+const listenCount  = document.getElementById('listen-count');
 const meaningInput = document.getElementById('meaning-input');
 const saveBtn      = document.getElementById('save-btn');
 const cardFront    = document.querySelector('.card-front');
@@ -27,25 +29,35 @@ async function init() {
   try {
     const res = await fetch('data.json');
     const data = await res.json();
-    items = [...data.vocabulary, ...data.grammar];
+    const sort = arr => [...arr].sort((a, b) => a.page - b.page);
+    allItems = {
+      read:   sort([...data.vocabulary, ...data.grammar].filter(i => i.source === 'read')),
+      listen: sort([...data.vocabulary, ...data.grammar].filter(i => i.source === 'listen')),
+    };
   } catch (e) {
     console.error('data.json 로드 실패', e);
     return;
   }
 
+  setupTabs();
   setupNavButtons();
   setupFilterButtons();
   setupSaveBtn();
   setupCardFlip();
   setupSwipe();
-  render();
+  renderMode();
 }
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function getModeItems() {
+  return allItems[mode] || [];
+}
+
 function getFiltered() {
+  const items = getModeItems();
   if (filter === 'all') return items;
   return items.filter(item => {
     const status = (state[item.image] || {}).status;
@@ -57,11 +69,26 @@ function getCurrentItem() {
   return getFiltered()[currentIndex] || null;
 }
 
+function renderMode() {
+  currentIndex = 0;
+  isFlipped = false;
+  cardInner.classList.remove('flipped');
+
+  readCount.textContent   = `(${allItems.read.length})`;
+  listenCount.textContent = `(${allItems.listen.length})`;
+
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+
+  progressBar.className = 'progress-bar' + (mode === 'listen' ? ' grammar' : '');
+  render();
+}
+
 function render() {
   const filtered = getFiltered();
+  const items = getModeItems();
   const item = getCurrentItem();
-
-  totalCount.textContent = `전체 ${items.length}장`;
 
   if (!item) {
     cardImg.src = '';
@@ -111,6 +138,19 @@ function setStatus(status) {
   if (!state[item.image]) state[item.image] = { status: null, meaning: '' };
   state[item.image].status = status;
   saveState();
+}
+
+function setupTabs() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      mode = tab.dataset.mode;
+      filter = 'all';
+      document.querySelectorAll('.filter-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.filter === 'all')
+      );
+      renderMode();
+    });
+  });
 }
 
 function setupNavButtons() {
