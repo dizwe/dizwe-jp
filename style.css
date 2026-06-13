@@ -111,8 +111,6 @@ main {
 /* ── Card ── */
 #card-container {
   flex: 1;
-  perspective: 1000px;
-  cursor: pointer;
   min-height: 0;
 }
 
@@ -122,40 +120,21 @@ main {
   position: relative;
 }
 
-.card-inner {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: var(--radius);
-}
-
-.card-inner.flipped {
-  transform: rotateY(180deg);
-}
-
-.card-front,
-.card-back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
 .card-front {
+  position: absolute;
+  inset: 0;
   background: var(--surface);
   border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .card-front img {
   max-width: 90%;
-  max-height: calc(100% - 60px);
+  max-height: calc(100% - 40px);
   object-fit: contain;
   border-radius: 8px;
   image-rendering: -webkit-optimize-contrast;
@@ -170,90 +149,6 @@ main {
   font-size: 11px;
   padding: 2px 8px;
   border-radius: 20px;
-}
-
-.hint {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 11px;
-  color: var(--text2);
-  opacity: 0.6;
-}
-
-.card-back {
-  background: var(--surface);
-  border: 2px solid var(--border);
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  gap: 16px;
-  overflow-y: auto;
-}
-
-.meaning-area {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-}
-
-.meaning-label {
-  font-size: 12px;
-  color: var(--text2);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-textarea#meaning-input {
-  flex: 1;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-size: 16px;
-  padding: 12px;
-  resize: none;
-  min-height: 100px;
-  line-height: 1.5;
-  font-family: inherit;
-}
-
-textarea#meaning-input:focus {
-  outline: none;
-  border-color: var(--orange);
-}
-
-.save-btn {
-  background: var(--orange);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.save-btn:active {
-  opacity: 0.8;
-}
-
-.example-area {
-  padding: 12px;
-  background: var(--surface2);
-  border-radius: 10px;
-}
-
-.example-label {
-  font-size: 11px;
-  color: var(--text2);
-  margin-bottom: 6px;
-  font-weight: 600;
 }
 
 /* ── Nav area ── */

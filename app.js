@@ -3,13 +3,11 @@
 const STORAGE_KEY = 'jp-tangocho-v1';
 
 let allItems = [];
-let mode = 'read';   // 'read' | 'listen'
+let mode = 'read';
 let filter = 'all';
 let currentIndex = 0;
-let isFlipped = false;
 let state = {};
 
-const cardInner    = document.getElementById('card-inner');
 const cardImg      = document.getElementById('card-img');
 const pageBadge    = document.getElementById('page-badge');
 const counter      = document.getElementById('counter');
@@ -17,10 +15,7 @@ const progressBar  = document.getElementById('progress-bar');
 const progressText = document.getElementById('progress-text');
 const readCount    = document.getElementById('read-count');
 const listenCount  = document.getElementById('listen-count');
-const meaningInput = document.getElementById('meaning-input');
-const saveBtn      = document.getElementById('save-btn');
 const cardFront    = document.querySelector('.card-front');
-const cardContainer= document.getElementById('card-container');
 
 async function init() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -42,8 +37,6 @@ async function init() {
   setupTabs();
   setupNavButtons();
   setupFilterButtons();
-  setupSaveBtn();
-  setupCardFlip();
   setupSwipe();
   renderMode();
 }
@@ -71,8 +64,6 @@ function getCurrentItem() {
 
 function renderMode() {
   currentIndex = 0;
-  isFlipped = false;
-  cardInner.classList.remove('flipped');
 
   readCount.textContent   = `(${allItems.read.length})`;
   listenCount.textContent = `(${allItems.listen.length})`;
@@ -102,7 +93,6 @@ function render() {
   const s = state[item.image] || {};
   cardImg.src = 'images/' + item.image;
   pageBadge.textContent = 'p.' + item.page;
-  meaningInput.value = s.meaning || '';
 
   cardFront.className = 'card-front';
   if (s.status === 'known') cardFront.classList.add('known-card');
@@ -115,27 +105,17 @@ function render() {
   progressText.textContent = `알아: ${knownCount} / ${items.length}`;
 }
 
-function setupCardFlip() {
-  cardContainer.addEventListener('click', e => {
-    if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
-    isFlipped = !isFlipped;
-    cardInner.classList.toggle('flipped', isFlipped);
-  });
-}
-
 function navigate(dir) {
   const filtered = getFiltered();
   if (!filtered.length) return;
   currentIndex = (currentIndex + dir + filtered.length) % filtered.length;
-  isFlipped = false;
-  cardInner.classList.remove('flipped');
   render();
 }
 
 function setStatus(status) {
   const item = getCurrentItem();
   if (!item) return;
-  if (!state[item.image]) state[item.image] = { status: null, meaning: '' };
+  if (!state[item.image]) state[item.image] = { status: null };
   state[item.image].status = status;
   saveState();
 }
@@ -160,27 +140,12 @@ function setupNavButtons() {
   document.getElementById('unknown-btn').addEventListener('click', () => { setStatus('unknown'); navigate(1); });
 }
 
-function setupSaveBtn() {
-  saveBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    const item = getCurrentItem();
-    if (!item) return;
-    if (!state[item.image]) state[item.image] = { status: null, meaning: '' };
-    state[item.image].meaning = meaningInput.value;
-    saveState();
-    saveBtn.textContent = '✓ 저장됨';
-    setTimeout(() => { saveBtn.textContent = '저장'; }, 1200);
-  });
-}
-
 function setupFilterButtons() {
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       filter = btn.dataset.filter;
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
       currentIndex = 0;
-      isFlipped = false;
-      cardInner.classList.remove('flipped');
       render();
     });
   });
